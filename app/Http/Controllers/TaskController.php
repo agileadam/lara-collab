@@ -62,8 +62,6 @@ class TaskController extends Controller
                                 ->orderBy('task_priorities.order', $direction)
                                 ->orderByDesc('tasks.created_at')
                                 ->select('tasks.*');
-                        }, function ($query) {
-                            $query->orderByDesc('created_at');
                         })
                         ->get(),
                 ];

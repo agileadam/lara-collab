@@ -4,7 +4,7 @@ import { produce } from "immer";
 const createTaskWebSocketUpdatesSlice = (set, get) => ({
   addTaskLocally: (task) => {
     return set(produce(state => {
-      state.tasks[task.group_id] = [task, ...state.tasks[task.group_id]];
+      state.tasks[task.group_id] = [...state.tasks[task.group_id], task].sort((a, b) => (a.order_column > b.order_column ? 1 : -1));
     }));
   },
   updateTaskLocally: (taskId, property, value, relatedData = null) => {
