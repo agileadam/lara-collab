@@ -199,6 +199,7 @@ export function EditTaskDrawer() {
               <TextInput
                 label='Name'
                 placeholder='Task name'
+                autoComplete='off'
                 value={data.name}
                 onChange={e => updateValue('name', e.target.value)}
                 onBlur={() => onBlurUpdate('name')}

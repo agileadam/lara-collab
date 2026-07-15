@@ -131,6 +131,7 @@ export function CreateTaskDrawer() {
             placeholder='Task name'
             required
             data-autofocus
+            autoComplete='off'
             value={form.data.name}
             onChange={e => updateValue('name', e.target.value)}
             error={form.errors.name}
