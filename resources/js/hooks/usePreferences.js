@@ -7,5 +7,11 @@ export default function usePreferences() {
     getInitialValueInEffect: false,
   });
 
-  return {tasksView, setTasksView};
+  const [projectsView, setProjectsView] = useLocalStorage({
+    key: "projects-view",
+    defaultValue: "card",
+    getInitialValueInEffect: false,
+  });
+
+  return { tasksView, setTasksView, projectsView, setProjectsView };
 }
