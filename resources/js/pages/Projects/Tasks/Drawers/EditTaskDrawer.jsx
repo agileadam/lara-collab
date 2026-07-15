@@ -113,6 +113,11 @@ export function EditTaskDrawer() {
     } else if (field === 'priority_id') {
       const priority = value ? priorities.find(p => p.id === value) : null;
       updateTaskProperty(task, field, value, priority);
+    } else if (field === 'assigned_to_user_id') {
+      const assignedUser = value
+        ? usersWithAccessToProject.find(i => i.id.toString() === value.toString())
+        : null;
+      updateTaskProperty(task, field, value, assignedUser);
     } else if (!onBlurInputs.includes(field)) {
       updateTaskProperty(task, field, value);
     }
