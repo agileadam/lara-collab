@@ -17,6 +17,7 @@ const useTaskFiltersStore = create((set, get) => ({
     },
     status: params.status || 0,
     labels: params.labels || [],
+    releases: params.releases || [],
   },
   prioritySort: params.sort?.priority || null,
   hasUrlParams: (exclude = []) => {
@@ -50,6 +51,7 @@ const useTaskFiltersStore = create((set, get) => ({
         },
         status: 0,
         labels: [],
+        releases: [],
       }
     }));
   },

@@ -55,6 +55,11 @@ class Project extends Model implements AuditableContract
         return $this->hasMany(TaskGroup::class);
     }
 
+    public function releases(): HasMany
+    {
+        return $this->hasMany(Release::class);
+    }
+
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);

@@ -1,12 +1,13 @@
 import useTaskGroupsStore from "@/hooks/store/useTaskGroupsStore";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
+import { date } from "@/utils/datetime";
 import { usePage } from "@inertiajs/react";
-import { Button, ColorSwatch, Stack, Text } from "@mantine/core";
+import { Button, ColorSwatch, Group, Stack, Text } from "@mantine/core";
 import FilterButton from "./Filters/FilterButton";
 import classes from "./Filters/css/FilterButton.module.css";
 
 export default function Filters() {
-  const { usersWithAccessToProject, labels } = usePage().props;
+  const { usersWithAccessToProject, labels, releases } = usePage().props;
 
   const { groups } = useTaskGroupsStore();
   const { filters, toggleArrayFilter, toggleObjectFilter, toggleValueFilter, prioritySort, sortHighToLow, sortLowToHigh, clearPrioritySort } =
@@ -105,6 +106,37 @@ export default function Filters() {
                   {item.name}
                 </FilterButton>
               ))}
+            </Stack>
+          </div>
+        )}
+
+        {releases.length > 0 && (
+          <div>
+            <Text fz="xs" fw={700} tt="uppercase" mb="sm">
+              Releases
+            </Text>
+            <Stack justify="flex-start" gap={6}>
+              {[...releases]
+                .sort((a, b) => new Date(a.target_date || "9999-12-31") - new Date(b.target_date || "9999-12-31"))
+                .map((item) => {
+                  const selected = filters.releases.includes(item.id);
+
+                  return (
+                    <FilterButton
+                      key={item.id}
+                      selected={selected}
+                      onClick={() => toggleArrayFilter("releases", item.id)}
+                      leftSection={<ColorSwatch color={item.color} size={18} />}
+                    >
+                      <Group gap={6} justify="space-between" wrap="nowrap">
+                        <span>{item.name}</span>
+                        {item.target_date && (
+                          <Text fz="xs" c={selected ? "white" : "dimmed"}>{date(item.target_date)}</Text>
+                        )}
+                      </Group>
+                    </FilterButton>
+                  );
+                })}
             </Stack>
           </div>
         )}

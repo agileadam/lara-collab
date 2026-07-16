@@ -36,6 +36,7 @@ class CreateTask
                 'due_on' => $data['due_on'],
                 'estimation' => $data['estimation'],
                 'priority_id' => $data['priority_id'] ?? null,
+                'release_id' => $data['release_id'] ?? null,
                 'pricing_type' => $data['pricing_type'],
                 'fixed_price' => $data['fixed_price'],
                 'hidden_from_clients' => $data['hidden_from_clients'],

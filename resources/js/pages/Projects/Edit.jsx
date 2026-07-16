@@ -19,6 +19,7 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { PricingType } from '@/utils/enums';
+import ReleasesSection from './Releases/ReleasesSection';
 
 const ProjectEdit = ({ dropdowns: { companies, users, currencies } }) => {
   const { item } = usePage().props;
@@ -154,6 +155,10 @@ const ProjectEdit = ({ dropdowns: { companies, users, currencies } }) => {
             <ActionButton loading={form.processing}>Update</ActionButton>
           </Group>
         </form>
+      </ContainerBox>
+
+      <ContainerBox maw={700} mt='xl'>
+        <ReleasesSection />
       </ContainerBox>
     </>
   );

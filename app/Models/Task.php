@@ -39,6 +39,7 @@ class Task extends Model implements AuditableContract, Sortable
         'due_on',
         'estimation',
         'priority_id',
+        'release_id',
         'pricing_type',
         'fixed_price',
         'hidden_from_clients',
@@ -80,6 +81,7 @@ class Task extends Model implements AuditableContract, Sortable
         'subscribedUsers:id',
         'labels:id,name,color',
         'priority:id,label,color,order',
+        'release:id,name,color,target_date',
         'attachments',
         'timeLogs.user:id,name',
     ];
@@ -93,6 +95,7 @@ class Task extends Model implements AuditableContract, Sortable
             (new IsNullFilter('due_on'))->setQueryName('not_set'),
             (new TaskCompletedFilter('completed_at'))->setQueryName('status'),
             (new WhereHasFilter('labels'))->setQueryName('labels'),
+            (new WhereInFilter('release_id'))->setQueryName('releases'),
         ];
     }
 
@@ -141,6 +144,11 @@ class Task extends Model implements AuditableContract, Sortable
     public function priority(): BelongsTo
     {
         return $this->belongsTo(TaskPriority::class, 'priority_id');
+    }
+
+    public function release(): BelongsTo
+    {
+        return $this->belongsTo(Release::class);
     }
 
     public function subscribedUsers(): BelongsToMany

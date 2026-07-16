@@ -72,6 +72,7 @@ class TaskController extends Controller
             'usersWithAccessToProject' => PermissionService::usersWithAccessToProject($project),
             'labels' => Label::get(['id', 'name', 'color']),
             'priorities' => TaskPriorityResource::collection(TaskPriority::orderBy('order')->get()),
+            'releases' => $project->releases()->orderBy('target_date')->get(['id', 'name', 'color', 'target_date']),
             'taskGroups' => $groups,
             'groupedTasks' => $groupedTasks,
             'openedTask' => $task ? $task->loadDefault() : null,

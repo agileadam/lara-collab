@@ -3,7 +3,7 @@ import RichTextEditor from '@/components/RichTextEditor';
 import useTaskDrawerStore from '@/hooks/store/useTaskDrawerStore';
 import useTasksStore from '@/hooks/store/useTasksStore';
 import useWebSockets from '@/hooks/useWebSockets';
-import { date } from '@/utils/datetime';
+import { date, dateFormat } from '@/utils/datetime';
 import { hasRoles } from '@/utils/user';
 import { usePage } from '@inertiajs/react';
 import {
@@ -24,6 +24,7 @@ import { useEffect, useRef, useState } from 'react';
 import Comments from './Comments';
 import LabelsDropdown from './LabelsDropdown';
 import PriorityDropdown from './PriorityDropdown';
+import ReleaseDropdown from './ReleaseDropdown';
 import Timer from './Timer';
 import classes from './css/TaskDrawer.module.css';
 import { PricingType } from '@/utils/enums';
@@ -39,6 +40,7 @@ export function EditTaskDrawer() {
     taskGroups,
     labels,
     priorities,
+    releases,
     openedTask,
     currency,
     auth: { user },
@@ -58,6 +60,7 @@ export function EditTaskDrawer() {
     pricing_type: PricingType.HOURLY,
     estimation: 0,
     priority_id: '',
+    release_id: '',
     fixed_price: 0,
     due_on: '',
     hidden_from_clients: false,
@@ -82,6 +85,7 @@ export function EditTaskDrawer() {
         pricing_type: task?.pricing_type || PricingType.HOURLY,
         estimation: task?.estimation || 0,
         priority_id: task?.priority_id || '',
+        release_id: task?.release_id || '',
         fixed_price: task?.fixed_price ? task.fixed_price / 100 : 0,
         due_on: task?.due_on ? dayjs(task?.due_on).toDate() : '',
         hidden_from_clients:
@@ -113,6 +117,9 @@ export function EditTaskDrawer() {
     } else if (field === 'priority_id') {
       const priority = value ? priorities.find(p => p.id === value) : null;
       updateTaskProperty(task, field, value, priority);
+    } else if (field === 'release_id') {
+      const release = value ? releases.find(r => r.id === value) : null;
+      updateTaskProperty(task, field, value, release);
     } else if (field === 'assigned_to_user_id') {
       const assignedUser = value
         ? usersWithAccessToProject.find(i => i.id.toString() === value.toString())
@@ -259,7 +266,7 @@ export function EditTaskDrawer() {
 
               <DateInput
                 clearable
-                valueFormat='DD MMM YYYY'
+                valueFormat={dateFormat()}
                 minDate={new Date()}
                 mt='md'
                 label='Due date'
@@ -294,6 +301,14 @@ export function EditTaskDrawer() {
                 value={data.priority_id}
                 onChange={value => {
                   updateValue('priority_id', value || null);
+                }}
+                mt='md'
+              />
+
+              <ReleaseDropdown
+                value={data.release_id}
+                onChange={value => {
+                  updateValue('release_id', value || null);
                 }}
                 mt='md'
               />

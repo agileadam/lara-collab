@@ -16,6 +16,16 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
+import dayjs from 'dayjs';
+
+const DATE_FORMAT_OPTIONS = [
+  'D. MMM YYYY',
+  'DD MMM YYYY',
+  'MMM D, YYYY',
+  'DD/MM/YYYY',
+  'MM/DD/YYYY',
+  'YYYY-MM-DD',
+].map(format => ({ value: format, label: `${format}  —  ${dayjs().format(format)}` }));
 
 const CompanyEdit = () => {
   const {
@@ -41,6 +51,7 @@ const CompanyEdit = () => {
     tax_id: item.tax_id || '',
     vat: item.vat || '',
     tax: item.tax / 100 || 0,
+    date_format: item.date_format || 'D. MMM YYYY',
   });
 
   return (
@@ -159,6 +170,22 @@ const CompanyEdit = () => {
               onChange={value => updateValue('country_id', value)}
               data={countries}
               error={form.errors.country_id}
+              disabled={!can('edit owner company')}
+            />
+          </Fieldset>
+
+          <Fieldset
+            legend='Localization'
+            mt='xl'
+          >
+            <Select
+              label='Date format'
+              placeholder='Select date format'
+              required
+              value={form.data.date_format}
+              onChange={value => updateValue('date_format', value)}
+              data={DATE_FORMAT_OPTIONS}
+              error={form.errors.date_format}
               disabled={!can('edit owner company')}
             />
           </Fieldset>

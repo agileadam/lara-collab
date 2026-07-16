@@ -85,6 +85,7 @@ class ProjectController extends Controller
     {
         return Inertia::render('Projects/Edit', [
             'item' => $project,
+            'releases' => $project->releases()->orderBy('target_date')->get(),
             'dropdowns' => [
                 'companies' => ClientCompany::dropdownValues(),
                 'users' => User::userDropdownValues(),

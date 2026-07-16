@@ -3,6 +3,7 @@ import Dropzone from '@/components/Dropzone';
 import RichTextEditor from '@/components/RichTextEditor';
 import useTaskDrawerStore from '@/hooks/store/useTaskDrawerStore';
 import useForm from '@/hooks/useForm';
+import { dateFormat } from '@/utils/datetime';
 import { hasRoles } from '@/utils/user';
 import { usePage } from '@inertiajs/react';
 import {
@@ -21,6 +22,7 @@ import { DateInput } from '@mantine/dates';
 import { useEffect } from 'react';
 import LabelsDropdown from './LabelsDropdown';
 import PriorityDropdown from './PriorityDropdown';
+import ReleaseDropdown from './ReleaseDropdown';
 import classes from './css/TaskDrawer.module.css';
 import { PricingType } from '@/utils/enums';
 
@@ -43,6 +45,7 @@ export function CreateTaskDrawer() {
     pricing_type: project?.default_pricing_type || PricingType.HOURLY,
     estimation: '',
     priority_id: null,
+    release_id: null,
     fixed_price: '',
     due_on: '',
     hidden_from_clients: false,
@@ -217,7 +220,7 @@ export function CreateTaskDrawer() {
 
           <DateInput
             clearable
-            valueFormat='DD MMM YYYY'
+            valueFormat={dateFormat()}
             minDate={new Date()}
             mt='md'
             label='Due date'
@@ -249,6 +252,12 @@ export function CreateTaskDrawer() {
           <PriorityDropdown
             value={form.data.priority_id}
             onChange={value => updateValue('priority_id', value || null)}
+            mt='md'
+          />
+
+          <ReleaseDropdown
+            value={form.data.release_id}
+            onChange={value => updateValue('release_id', value || null)}
             mt='md'
           />
 

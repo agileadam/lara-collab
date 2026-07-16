@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\OwnerCompany;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\NotificationService;
@@ -59,6 +60,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'shared' => [
                 'roles' => fn () => Role::orderBy('name')->get(['id', 'name'])->toArray(),
+                'dateFormat' => fn () => OwnerCompany::first()?->date_format ?? 'D. MMM YYYY',
             ],
             'flash' => session()->get('flash'),
             'version' => config('app.version'),

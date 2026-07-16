@@ -32,6 +32,18 @@ class UpdateOwnerCompanyRequest extends FormRequest
                     ->dimensions(Rule::dimensions()->ratio(15 / 4)),
                 'nullable',
             ],
+            'date_format' => [
+                'required',
+                'string',
+                Rule::in([
+                    'D. MMM YYYY',
+                    'DD MMM YYYY',
+                    'MMM D, YYYY',
+                    'DD/MM/YYYY',
+                    'MM/DD/YYYY',
+                    'YYYY-MM-DD',
+                ]),
+            ],
         ];
     }
 }

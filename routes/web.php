@@ -20,6 +20,7 @@ use App\Http\Controllers\Settings\TaskPriorityController;
 use App\Http\Controllers\Task\AttachmentController;
 use App\Http\Controllers\Task\CommentController;
 use App\Http\Controllers\Task\GroupController;
+use App\Http\Controllers\Task\ReleaseController;
 use App\Http\Controllers\Task\TimeLogController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -46,6 +47,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('{project}/task-groups/{taskGroup}', [GroupController::class, 'destroy'])->name('task-groups.destroy')->scopeBindings();
         Route::post('{project}/task-groups/{taskGroupId}/restore', [GroupController::class, 'restore'])->name('task-groups.restore')->scopeBindings();
         Route::post('{project}/task-groups/reorder', [GroupController::class, 'reorder'])->name('task-groups.reorder');
+
+        // RELEASES
+        Route::post('{project}/releases', [ReleaseController::class, 'store'])->name('releases.store');
+        Route::put('{project}/releases/{release}', [ReleaseController::class, 'update'])->name('releases.update')->scopeBindings();
+        Route::delete('{project}/releases/{release}', [ReleaseController::class, 'destroy'])->name('releases.destroy')->scopeBindings();
 
         // TASKS
         Route::get('{project}/tasks', [TaskController::class, 'index'])->name('tasks');

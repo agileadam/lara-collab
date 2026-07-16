@@ -20,6 +20,7 @@ class PermissionService
             'Client Company' => ['view client companies', 'create client company', 'edit client company', 'archive client company', 'restore client company'],
             'Project' => ['view projects', 'view project', 'create project', 'edit project', 'archive project', 'restore project', 'edit project user access'],
             'TaskGroups' => ['create task group', 'edit task group', 'archive task group', 'restore task group', 'reorder task group'],
+            'Releases' => ['create release', 'edit release', 'delete release'],
             'Notes' => ['view notes', 'create note', 'edit note', 'delete note'],
             'Tasks' => [
                 'view tasks', 'create task', 'edit task', 'archive task', 'restore task', 'reorder task', 'complete task', 'add time log', 'delete time log',
@@ -33,6 +34,7 @@ class PermissionService
             'User' => ['view users'],
             'Project' => ['view projects', 'view project', 'create project', 'edit project', 'archive project', 'restore project', 'edit project user access'],
             'TaskGroups' => ['create task group', 'edit task group', 'archive task group', 'restore task group', 'reorder task group'],
+            'Releases' => ['create release', 'edit release', 'delete release'],
             'Notes' => ['view notes', 'create note', 'edit note', 'delete note'],
             'Tasks' => [
                 'view tasks', 'create task', 'edit task', 'archive task', 'restore task', 'reorder task', 'complete task', 'add time log', 'delete time log',

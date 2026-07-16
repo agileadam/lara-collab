@@ -33,6 +33,7 @@ class OwnerCompany extends Model implements AuditableContract
         'tax_id',
         'vat',
         'tax',
+        'date_format',
     ];
 
     public function country(): BelongsTo
