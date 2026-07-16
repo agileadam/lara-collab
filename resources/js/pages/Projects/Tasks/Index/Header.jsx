@@ -5,6 +5,7 @@ import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import usePreferences from "@/hooks/usePreferences";
 import { redirectTo, reloadWithQuery } from "@/utils/route";
+import ProjectActions from "./ProjectActions";
 import { usePage } from "@inertiajs/react";
 import { ActionIcon, Button, Grid, Group, Text, Title, Tooltip } from "@mantine/core";
 import {
@@ -67,6 +68,8 @@ export default function Header() {
           )}
 
           <ArchivedFilterButton />
+
+          <ProjectActions />
         </Group>
       </Grid.Col>
       <Grid.Col span="content">
