@@ -4,20 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
-use Lacodix\LaravelModelFilter\Traits\IsSortable;
 use LaravelArchivable\Archivable;
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableTrait;
 
-class Label extends Model
+class Label extends Model implements Sortable
 {
-    use Archivable, IsSearchable, IsSortable;
+    use Archivable, IsSearchable, SortableTrait;
 
-    protected $fillable = ['name', 'color'];
+    protected $fillable = ['name', 'color', 'order_column'];
 
     protected $searchable = [
         'name',
     ];
 
-    protected $sortable = [
-        'name' => 'asc',
-    ];
+    protected static function booted(): void
+    {
+        static::addGlobalScope('ordered', function ($query) {
+            $query->ordered();
+        });
+    }
 }

@@ -46,4 +46,12 @@ class LabelPolicy
     {
         return $user->hasPermissionTo('restore label');
     }
+
+    /**
+     * Determine whether the user can reorder labels.
+     */
+    public function reorder(User $user): bool
+    {
+        return $user->hasPermissionTo('reorder label');
+    }
 }

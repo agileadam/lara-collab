@@ -23,9 +23,8 @@ class LabelController extends Controller
         return Inertia::render('Settings/Labels/Index', [
             'items' => LabelResource::collection(
                 Label::searchByQueryString()
-                    ->sortByQueryString()
                     ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
-                    ->paginate(12)
+                    ->get()
             ),
         ]);
     }
@@ -70,5 +69,14 @@ class LabelController extends Controller
         $label->unArchive();
 
         return redirect()->back()->success('Label restored', 'The restoring of the label was completed successfully.');
+    }
+
+    public function reorder(Request $request)
+    {
+        $this->authorize('reorder', Label::class);
+
+        Label::setNewOrder($request->ids);
+
+        return response()->json();
     }
 }

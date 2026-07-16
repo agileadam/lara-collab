@@ -1,22 +1,31 @@
 import ArchivedFilterButton from "@/components/ArchivedFilterButton";
-import Pagination from "@/components/Pagination";
 import SearchInput from "@/components/SearchInput";
 import TableHead from "@/components/TableHead";
 import TableRowEmpty from "@/components/TableRowEmpty";
 import Layout from "@/layouts/MainLayout";
 import { redirectTo, reloadWithQuery } from "@/utils/route";
+import { reorder } from "@/utils/reorder";
 import { actionColumnVisibility, prepareColumns } from "@/utils/table";
+import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { usePage } from "@inertiajs/react";
 import { Button, Grid, Group, Table } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import TableRow from "./TableRow";
 
 const LabelsIndex = () => {
   const { items } = usePage().props;
+  const [labels, setLabels] = useState(items);
+
+  useEffect(() => setLabels(items), [items]);
+
+  const canReorder = can("reorder label") && !route().params.search && !route().params.archived;
 
   const columns = prepareColumns([
+    { label: "", sortable: false, visible: canReorder },
     { label: "Color", sortable: false },
-    { label: "Name", column: "name" },
+    { label: "Name", sortable: false },
     {
       label: "Actions",
       sortable: false,
@@ -24,14 +33,26 @@ const LabelsIndex = () => {
     },
   ]);
 
-  const rows = items.data.length ? (
-    items.data.map((item) => <TableRow item={item} key={item.id} />)
+  const onDragEnd = ({ source, destination }) => {
+    if (!destination) return;
+
+    const result = reorder(labels, source.index, destination.index);
+    setLabels(result);
+
+    axios
+      .post(route("settings.labels.reorder"), { ids: result.map((i) => i.id) })
+      .catch(() => alert("Failed to save label order"));
+  };
+
+  const rows = labels.length ? (
+    labels.map((item, index) => (
+      <TableRow item={item} index={index} draggable={canReorder} key={item.id} />
+    ))
   ) : (
     <TableRowEmpty colSpan={columns.length} />
   );
 
   const search = (search) => reloadWithQuery({ search });
-  const sort = (sort) => reloadWithQuery(sort);
 
   return (
     <>
@@ -57,15 +78,27 @@ const LabelsIndex = () => {
 
       <Table.ScrollContainer maw={500} my="lg">
         <Table verticalSpacing="sm">
-          <TableHead columns={columns} sort={sort} />
-          <Table.Tbody>{rows}</Table.Tbody>
+          <TableHead columns={columns} />
+          {canReorder ? (
+            <DragDropContext onDragEnd={onDragEnd}>
+              <Droppable droppableId="labels">
+                {(provided) => (
+                  <Table.Tbody ref={provided.innerRef} {...provided.droppableProps}>
+                    {rows}
+                    <Table.Tr>
+                      <Table.Td colSpan={columns.length} p={0} style={{ border: 0 }}>
+                        {provided.placeholder}
+                      </Table.Td>
+                    </Table.Tr>
+                  </Table.Tbody>
+                )}
+              </Droppable>
+            </DragDropContext>
+          ) : (
+            <Table.Tbody>{rows}</Table.Tbody>
+          )}
         </Table>
       </Table.ScrollContainer>
-
-      <Pagination
-        current={items.meta.current_page}
-        pages={items.meta.last_page}
-      />
     </>
   );
 };

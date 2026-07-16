@@ -1,9 +1,18 @@
 import TableRowActions from "@/components/TableRowActions";
+import { Draggable } from "@hello-pangea/dnd";
 import { ColorSwatch, Table, Text } from "@mantine/core";
+import { IconGripVertical } from "@tabler/icons-react";
 
-export default function TableRow({ item }) {
-  return (
-    <Table.Tr key={item.id}>
+export default function TableRow({ item, index, draggable }) {
+  const cells = (dragHandleProps) => (
+    <>
+      {draggable && (
+        <Table.Td w={36}>
+          <div {...dragHandleProps} style={{ cursor: "grab", display: "flex" }}>
+            <IconGripVertical size={16} stroke={1.5} />
+          </div>
+        </Table.Td>
+      )}
       <Table.Td w={80}>
         <ColorSwatch color={item.color} />
       </Table.Td>
@@ -33,6 +42,24 @@ export default function TableRow({ item }) {
           />
         </Table.Td>
       )}
-    </Table.Tr>
+    </>
+  );
+
+  if (!draggable) {
+    return <Table.Tr>{cells()}</Table.Tr>;
+  }
+
+  return (
+    <Draggable draggableId={item.id.toString()} index={index}>
+      {(provided, snapshot) => (
+        <Table.Tr
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          bg={snapshot.isDragging ? "gray.0" : undefined}
+        >
+          {cells(provided.dragHandleProps)}
+        </Table.Tr>
+      )}
+    </Draggable>
   );
 }

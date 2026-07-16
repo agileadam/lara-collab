@@ -141,6 +141,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         Route::resource('labels', LabelController::class)->except(['show']);
         Route::post('labels/{labelId}/restore', [LabelController::class, 'restore'])->name('labels.restore');
+        Route::post('labels/reorder', [LabelController::class, 'reorder'])->name('labels.reorder');
 
         Route::resource('task-priorities', TaskPriorityController::class)->except(['show']);
         Route::post('task-priorities/{priorityId}/restore', [TaskPriorityController::class, 'restore'])->name('task-priorities.restore');

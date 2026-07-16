@@ -12,7 +12,7 @@ class PermissionService
     public static $permissionsByRole = [
         'admin' => [
             'User' => ['view users', 'view user rate', 'create user', 'edit user', 'archive user', 'restore user'],
-            'Label' => ['view labels', 'create label', 'edit label', 'archive label', 'restore label'],
+            'Label' => ['view labels', 'create label', 'edit label', 'archive label', 'restore label', 'reorder label'],
             'Task Priority' => ['view task priority', 'create task priority', 'edit task priority', 'delete task priority', 'restore task priority'],
             'Role' => ['view roles', 'create role', 'edit role', 'archive role', 'restore role'],
             'Owner Company' => ['view owner company', 'edit owner company'],
