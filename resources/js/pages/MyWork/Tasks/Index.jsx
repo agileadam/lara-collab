@@ -3,6 +3,7 @@ import Layout from "@/layouts/MainLayout";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import { usePage } from "@inertiajs/react";
 import { Accordion, Box, Breadcrumbs, Button, Center, Group, Stack, Text, Title, rem } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { IconRocket, IconStar, IconStarFilled } from "@tabler/icons-react";
 import Task from "./Task";
 import classes from "./css/Index.module.css";
@@ -14,11 +15,19 @@ const TasksIndex = () => {
 
   projects = projects.filter((i) => i.tasks.length);
 
-  let opened = projects.filter((i) => i.favorite).map((i) => i.id.toString());
+  const favorited = projects.filter((i) => i.favorite).map((i) => i.id.toString());
+  const defaultOpened = favorited.length
+    ? favorited
+    : (projects[0] ? [projects[0].id.toString()] : []);
 
-  if (opened.length === 0) {
-    opened = projects[0]?.id.toString() || "";
-  }
+  const [opened, setOpened] = useLocalStorage({
+    key: "my-work-tasks-opened-projects",
+    defaultValue: defaultOpened,
+    getInitialValueInEffect: false,
+  });
+
+  const expandAll = () => setOpened(projects.map((i) => i.id.toString()));
+  const collapseAll = () => setOpened([]);
 
   return (
     <>
@@ -31,33 +40,44 @@ const TasksIndex = () => {
         Tasks assigned to you
       </Title>
 
-      <Group mb={16}>
-        <Group gap="xs">
-          <Button
-            size="xs"
-            variant={prioritySort === "asc" ? "filled" : "light"}
-            onClick={sortHighToLow}
-          >
-            Priority: High → Low
-          </Button>
-          <Button
-            size="xs"
-            variant={prioritySort === "desc" ? "filled" : "light"}
-            onClick={sortLowToHigh}
-          >
-            Priority: Low → High
-          </Button>
-          {prioritySort && (
-            <Button size="xs" variant="subtle" onClick={clearPrioritySort}>
-              Default order
+      <Box maw={1000}>
+        <Group mb={16} justify="space-between">
+          <Group gap="xs">
+            <Button
+              size="xs"
+              variant={prioritySort === "asc" ? "filled" : "light"}
+              onClick={sortHighToLow}
+            >
+              Priority: High → Low
             </Button>
+            <Button
+              size="xs"
+              variant={prioritySort === "desc" ? "filled" : "light"}
+              onClick={sortLowToHigh}
+            >
+              Priority: Low → High
+            </Button>
+            {prioritySort && (
+              <Button size="xs" variant="subtle" onClick={clearPrioritySort}>
+                Default order
+              </Button>
+            )}
+          </Group>
+
+          {projects.length > 0 && (
+            <Group gap="xs">
+              <Button size="xs" variant="subtle" onClick={expandAll}>
+                Expand All
+              </Button>
+              <Button size="xs" variant="subtle" onClick={collapseAll}>
+                Collapse All
+              </Button>
+            </Group>
           )}
         </Group>
-      </Group>
 
-      <Box maw={1000}>
         {projects.length ? (
-          <Accordion variant="separated" radius="md" multiple defaultValue={opened}>
+          <Accordion variant="separated" radius="md" multiple value={opened} onChange={setOpened}>
             {projects.map((project) => (
               <Accordion.Item
                 key={project.id}
