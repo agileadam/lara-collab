@@ -10,7 +10,7 @@ export default function Filters() {
   const { usersWithAccessToProject, labels, releases } = usePage().props;
 
   const { groups } = useTaskGroupsStore();
-  const { filters, toggleArrayFilter, toggleObjectFilter, toggleValueFilter, prioritySort, sortHighToLow, sortLowToHigh, clearPrioritySort } =
+  const { filters, toggleArrayFilter, toggleObjectFilter, setValueFilter, prioritySort, sortHighToLow, sortLowToHigh, clearPrioritySort } =
     useTaskFiltersStore();
 
   return (
@@ -147,8 +147,20 @@ export default function Filters() {
           </Text>
           <Stack justify="flex-start" gap={6}>
             <FilterButton
+              selected={filters.status === "all"}
+              onClick={() => setValueFilter("status", "all")}
+            >
+              All
+            </FilterButton>
+            <FilterButton
+              selected={filters.status === "open" || !filters.status}
+              onClick={() => setValueFilter("status", "open")}
+            >
+              Open
+            </FilterButton>
+            <FilterButton
               selected={filters.status === "completed"}
-              onClick={() => toggleValueFilter("status", "completed")}
+              onClick={() => setValueFilter("status", "completed")}
             >
               Completed
             </FilterButton>

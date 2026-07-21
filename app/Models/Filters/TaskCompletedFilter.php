@@ -13,6 +13,8 @@ class TaskCompletedFilter extends Filter
     {
         return match ($this->values[0]) {
             'completed' => $query->whereNotNull('completed_at'),
+            'open' => $query->whereNull('completed_at'),
+            'all' => $query,
         };
     }
 }

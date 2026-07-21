@@ -1,5 +1,4 @@
 import { EmptyResult } from "@/components/EmptyResult";
-import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import useTaskGroupsStore from "@/hooks/store/useTaskGroupsStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
 import usePreferences from "@/hooks/usePreferences";
@@ -28,11 +27,8 @@ const TasksIndex = () => {
 
   const { groups, setGroups, reorderGroup } = useTaskGroupsStore();
   const { tasks, setTasks, addTask, reorderTask, moveTask } = useTasksStore();
-  const { hasFilters } = useTaskFiltersStore();
   const { initProjectWebSocket } = useWebSockets();
   const { tasksView } = usePreferences();
-
-  const usingFilters = hasFilters();
 
   useEffect(() => {
     setGroups(taskGroups);
@@ -80,19 +76,14 @@ const TasksIndex = () => {
                     {(provided) => (
                       <div {...provided.droppableProps} ref={provided.innerRef}>
                         <div className={classes.viewport}>
-                          {groups
-                            .filter(
-                              (group) =>
-                                !usingFilters || (usingFilters && tasks[group.id]?.length > 0),
-                            )
-                            .map((group, index) => (
-                              <TaskGroup
-                                key={group.id}
-                                index={index}
-                                group={group}
-                                tasks={tasks[group.id] || []}
-                              />
-                            ))}
+                          {groups.map((group, index) => (
+                            <TaskGroup
+                              key={group.id}
+                              index={index}
+                              group={group}
+                              tasks={tasks[group.id] || []}
+                            />
+                          ))}
                           {provided.placeholder}
                           {!route().params.archived && can("create task group") && (
                             <Button

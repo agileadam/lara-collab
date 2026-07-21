@@ -82,16 +82,15 @@ const useTaskFiltersStore = create((set, get) => ({
       }),
     );
   },
-  toggleValueFilter: (field, value) => {
+  setValueFilter: (field, value) => {
     return set(
       produce((state) => {
-        if (!state.filters[field]) {
-          state.filters[field] = value;
-          reloadWithQuery({ [field]: value }, true);
-        } else {
-          state.filters[field] = 0;
-          reloadWithoutQueryParams({exclude: [field]});
+        if (state.filters[field] === value) {
+          return;
         }
+
+        state.filters[field] = value;
+        reloadWithQuery({ [field]: value }, true);
       }),
     );
   },
