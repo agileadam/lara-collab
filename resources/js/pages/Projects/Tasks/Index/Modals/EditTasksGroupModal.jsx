@@ -26,6 +26,10 @@ function ModalForm({ item }) {
         label="Name"
         placeholder="Group name"
         required
+        autoComplete="off"
+        data-1p-ignore
+        data-lpignore="true"
+        data-bwignore
         data-autofocus
         value={form.data.name}
         onChange={(e) => updateValue("name", e.target.value)}

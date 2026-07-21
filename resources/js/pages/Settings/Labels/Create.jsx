@@ -34,6 +34,10 @@ const LabelCreate = () => {
             label="Name"
             placeholder="Label name"
             required
+            autoComplete="off"
+            data-1p-ignore
+            data-lpignore="true"
+            data-bwignore
             value={form.data.name}
             onChange={(e) => updateValue("name", e.target.value)}
             error={form.errors.name}

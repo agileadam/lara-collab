@@ -93,6 +93,10 @@ const UserEdit = () => {
             label="Name"
             placeholder="User full name"
             required
+            autoComplete="off"
+            data-1p-ignore
+            data-lpignore="true"
+            data-bwignore
             mt="md"
             value={form.data.name}
             onChange={(e) => updateValue("name", e.target.value)}
