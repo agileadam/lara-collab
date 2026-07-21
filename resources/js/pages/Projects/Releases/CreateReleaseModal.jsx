@@ -1,6 +1,6 @@
 import useForm from "@/hooks/useForm";
 import { dateFormat } from "@/utils/datetime";
-import { Button, ColorInput, Flex, Text, TextInput } from "@mantine/core";
+import { Button, Checkbox, ColorInput, Flex, Text, TextInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { modals } from "@mantine/modals";
 
@@ -12,6 +12,7 @@ function ModalForm() {
       name: "",
       color: "",
       target_date: "",
+      assignable: true,
     },
   );
 
@@ -72,6 +73,15 @@ function ModalForm() {
         value={form.data.target_date}
         onChange={(value) => updateValue("target_date", value)}
         error={form.errors.target_date}
+      />
+
+      <Checkbox
+        label="Assignable"
+        description="Allow this release to be assigned to tasks"
+        mt="md"
+        checked={form.data.assignable}
+        onChange={(e) => updateValue("assignable", e.currentTarget.checked)}
+        error={form.errors.assignable}
       />
 
       <Flex justify="flex-end" mt="xl">

@@ -39,6 +39,9 @@ class StoreReleaseRequest extends FormRequest
                 'nullable',
                 'date',
             ],
+            'assignable' => [
+                'boolean',
+            ],
         ];
     }
 }

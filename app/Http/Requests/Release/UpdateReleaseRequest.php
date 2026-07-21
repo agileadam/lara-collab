@@ -40,6 +40,9 @@ class UpdateReleaseRequest extends FormRequest
                 'nullable',
                 'date',
             ],
+            'assignable' => [
+                'boolean',
+            ],
         ];
     }
 }

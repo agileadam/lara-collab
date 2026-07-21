@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Release extends Model
 {
-    protected $fillable = ['name', 'color', 'target_date', 'project_id'];
+    protected $fillable = ['name', 'color', 'target_date', 'project_id', 'assignable'];
 
     protected $casts = [
         'target_date' => 'date',
+        'assignable' => 'boolean',
     ];
 
     public function project(): BelongsTo

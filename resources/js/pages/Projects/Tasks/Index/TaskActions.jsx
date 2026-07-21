@@ -1,14 +1,24 @@
 import { openConfirmModal } from "@/components/ConfirmModal";
-import { ActionIcon, Group, Menu, rem } from "@mantine/core";
-import { IconArchive, IconArchiveOff, IconDots } from "@tabler/icons-react";
+import useTasksStore from "@/hooks/store/useTasksStore";
+import { usePage } from "@inertiajs/react";
+import { ActionIcon, ColorSwatch, Group, Menu, rem } from "@mantine/core";
+import { IconArchive, IconArchiveOff, IconCheck, IconDots } from "@tabler/icons-react";
 import { useForm } from "laravel-precognition-react-inertia";
 
 export default function TaskActions({ task, ...props }) {
+  const { releases } = usePage().props;
+  const { updateTaskProperty } = useTasksStore();
+
   const archiveForm = useForm(
     "delete",
     route("projects.tasks.destroy", [task.project_id, task.id]),
   );
   const restoreForm = useForm("post", route("projects.tasks.restore", [task.project_id, task.id]));
+
+  const setRelease = (releaseId) => {
+    const release = releaseId ? releases.find((r) => r.id === releaseId) : null;
+    updateTaskProperty(task, "release_id", releaseId, release);
+  };
 
   const openArchiveModal = () =>
     openConfirmModal({
@@ -33,7 +43,8 @@ export default function TaskActions({ task, ...props }) {
   return (
     <Group gap={0} justify="flex-end" {...props}>
       {((can("archive task") && !route().params.archived) ||
-        (can("restore task") && route().params.archived)) && (
+        (can("restore task") && route().params.archived) ||
+        can("edit task")) && (
         <Menu
           withArrow
           position="bottom-end"
@@ -69,6 +80,36 @@ export default function TaskActions({ task, ...props }) {
               >
                 Archive
               </Menu.Item>
+            )}
+            {can("edit task") && releases?.length > 0 && (
+              <>
+                <Menu.Divider />
+                <Menu.Label>Release</Menu.Label>
+                <Menu.Item
+                  rightSection={
+                    task.release_id === null && (
+                      <IconCheck style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                    )
+                  }
+                  onClick={() => setRelease(null)}
+                >
+                  No release
+                </Menu.Item>
+                {releases.map((release) => (
+                  <Menu.Item
+                    key={release.id}
+                    leftSection={<ColorSwatch color={release.color || "#ced4da"} size={12} />}
+                    rightSection={
+                      task.release_id === release.id && (
+                        <IconCheck style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                      )
+                    }
+                    onClick={() => setRelease(release.id)}
+                  >
+                    {release.name}
+                  </Menu.Item>
+                ))}
+              </>
             )}
           </Menu.Dropdown>
         </Menu>

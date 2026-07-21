@@ -2,6 +2,8 @@
 
 use App\Actions\Task\CreateTask;
 use App\Models\ClientCompany;
+use App\Models\Currency;
+use App\Models\OwnerCompany;
 use App\Models\Project;
 use App\Models\Release;
 use App\Models\Task;
@@ -122,6 +124,37 @@ it('nulls out release_id on tasks when the release is deleted', function () {
 
     $task->refresh();
     expect($task->release_id)->toBeNull();
+});
+
+it('defaults a release to assignable and can persist assignable = false on update', function () {
+    $response = $this->post(route('projects.releases.store', $this->project), [
+        'name' => '1.0.1',
+    ]);
+    $response->assertRedirect();
+
+    $release = Release::where('project_id', $this->project->id)->where('name', '1.0.1')->firstOrFail();
+    expect($release->assignable)->toBeTrue();
+
+    $response = $this->put(route('projects.releases.update', [$this->project, $release]), [
+        'name' => '1.0.1',
+        'assignable' => false,
+    ]);
+    $response->assertRedirect();
+
+    expect($release->refresh()->assignable)->toBeFalse();
+});
+
+it('excludes non-assignable releases from the tasks index releases prop', function () {
+    OwnerCompany::create(['name' => 'Test Company', 'currency_id' => Currency::first()->id]);
+
+    $assignable = Release::create(['project_id' => $this->project->id, 'name' => '1.0.1', 'assignable' => true]);
+    Release::create(['project_id' => $this->project->id, 'name' => '0.9.0', 'assignable' => false]);
+
+    $response = $this->get(route('projects.tasks', $this->project));
+
+    $response->assertInertia(fn ($page) => $page
+        ->has('releases', 1)
+        ->where('releases.0.id', $assignable->id));
 });
 
 it('can create a task without a release', function () {
