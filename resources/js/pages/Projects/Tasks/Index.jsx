@@ -1,4 +1,5 @@
 import { EmptyResult } from "@/components/EmptyResult";
+import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import useTaskGroupsStore from "@/hooks/store/useTaskGroupsStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
 import usePreferences from "@/hooks/usePreferences";
@@ -27,8 +28,14 @@ const TasksIndex = () => {
 
   const { groups, setGroups, reorderGroup } = useTaskGroupsStore();
   const { tasks, setTasks, addTask, reorderTask, moveTask } = useTasksStore();
+  const { filters } = useTaskFiltersStore();
   const { initProjectWebSocket } = useWebSockets();
   const { tasksView } = usePreferences();
+
+  const visibleGroups =
+    filters.groups.length > 0
+      ? groups.filter((group) => filters.groups.includes(group.id))
+      : groups;
 
   useEffect(() => {
     setGroups(taskGroups);
@@ -76,7 +83,7 @@ const TasksIndex = () => {
                     {(provided) => (
                       <div {...provided.droppableProps} ref={provided.innerRef}>
                         <div className={classes.viewport}>
-                          {groups.map((group, index) => (
+                          {visibleGroups.map((group, index) => (
                             <TaskGroup
                               key={group.id}
                               index={index}
