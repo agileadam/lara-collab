@@ -41,6 +41,10 @@ class TaskUpdated implements ShouldBroadcast
             $this->relatedData = ['priority' => $this->task->toArray()['priority']];
         }
 
+        if ($updateField === 'group_id') {
+            $this->relatedData = ['completed_at' => $this->task->toArray()['completed_at']];
+        }
+
         $this->dontBroadcastToCurrentUser();
     }
 

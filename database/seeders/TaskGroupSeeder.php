@@ -16,11 +16,11 @@ class TaskGroupSeeder extends Seeder
 
         foreach ($projects as $project) {
             $project->taskGroups()->createMany([
-                ['name' => 'Backlog'],
-                ['name' => 'Todo'],
-                ['name' => 'In progress'],
-                ['name' => 'QA'],
-                ['name' => 'Done'],
+                ['name' => 'Backlog', 'reopen_tasks' => true],
+                ['name' => 'Todo', 'reopen_tasks' => true],
+                ['name' => 'In Progress', 'reopen_tasks' => true],
+                ['name' => 'QA', 'reopen_tasks' => true],
+                ['name' => 'Done', 'mark_tasks_done' => true],
                 ['name' => 'Deployed'],
             ]);
         }

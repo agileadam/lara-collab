@@ -5,6 +5,7 @@ namespace App\Actions\Task;
 use App\Enums\PricingType;
 use App\Events\Task\TaskUpdated;
 use App\Models\Task;
+use App\Models\TaskGroup;
 
 class UpdateTask
 {
@@ -28,6 +29,14 @@ class UpdateTask
 
             if ($updateField === 'group_id') {
                 $task->update(['order_column' => 0]);
+
+                $group = TaskGroup::find($data['group_id']);
+
+                if ($group?->mark_tasks_done && $task->completed_at === null) {
+                    $task->update(['completed_at' => now()]);
+                } elseif ($group?->reopen_tasks && $task->completed_at !== null) {
+                    $task->update(['completed_at' => null]);
+                }
             }
         }
 

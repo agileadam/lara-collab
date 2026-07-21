@@ -22,6 +22,8 @@ class TaskGroupChanged implements ShouldBroadcast
         public int $toGroupId,
         public int $fromIndex,
         public int $toIndex,
+        public bool $markedDone = false,
+        public bool $reopened = false,
     ) {
         $this->dontBroadcastToCurrentUser();
     }

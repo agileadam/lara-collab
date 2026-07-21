@@ -2,6 +2,7 @@ import createTaskAttachmentsSlice from '@/hooks/store/tasks/TaskAttachmentsSlice
 import createTaskCommentsSlice from '@/hooks/store/tasks/TaskCommentsSlice';
 import createTaskTimeLogsSlice from '@/hooks/store/tasks/TaskTimeLogsSlice';
 import createTaskWebSocketUpdatesSlice from '@/hooks/store/tasks/TaskWebSocketUpdatesSlice';
+import useTaskGroupsStore from '@/hooks/store/useTaskGroupsStore';
 import { move, reorder } from '@/utils/reorder';
 import axios from 'axios';
 import { produce } from "immer";
@@ -53,6 +54,14 @@ const useTasksStore = create((set, get) => ({
           state.tasks[value] = result[value];
 
           state.tasks[value][0][property] = value;
+
+          const destinationGroup = useTaskGroupsStore.getState().findTaskGroup(+value);
+
+          if (destinationGroup?.mark_tasks_done && state.tasks[value][0].completed_at === null) {
+            state.tasks[value][0].completed_at = new Date().toISOString();
+          } else if (destinationGroup?.reopen_tasks && state.tasks[value][0].completed_at !== null) {
+            state.tasks[value][0].completed_at = null;
+          }
         } else {
           state.tasks[task.group_id][index][property] = value;
           // For properties with related objects (e.g., priority_id has priority object)
@@ -103,6 +112,15 @@ const useTasksStore = create((set, get) => ({
     const destinationGroupId = +destination.droppableId.split("-")[1];
 
     const result = move(get().tasks, sourceGroupId, destinationGroupId, source.index, destination.index);
+
+    const destinationGroup = useTaskGroupsStore.getState().findTaskGroup(destinationGroupId);
+    const movedTask = result[destinationGroupId][destination.index];
+
+    if (destinationGroup?.mark_tasks_done && movedTask.completed_at === null) {
+      movedTask.completed_at = new Date().toISOString();
+    } else if (destinationGroup?.reopen_tasks && movedTask.completed_at !== null) {
+      movedTask.completed_at = null;
+    }
 
     const data = {
       ids: result[destinationGroupId].map((i) => i.id),

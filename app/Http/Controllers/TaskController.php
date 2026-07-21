@@ -123,12 +123,29 @@ class TaskController extends Controller
         Task::setNewOrder($request->ids);
         Task::whereIn('id', $request->ids)->update(['group_id' => $request->to_group_id]);
 
+        $destinationGroup = TaskGroup::find($request->to_group_id);
+        $movedTaskId = $request->ids[$request->to_index] ?? null;
+        $markedDone = false;
+        $reopened = false;
+
+        if ($movedTaskId && $destinationGroup?->mark_tasks_done) {
+            $markedDone = (bool) Task::whereKey($movedTaskId)
+                ->whereNull('completed_at')
+                ->update(['completed_at' => now()]);
+        } elseif ($movedTaskId && $destinationGroup?->reopen_tasks) {
+            $reopened = (bool) Task::whereKey($movedTaskId)
+                ->whereNotNull('completed_at')
+                ->update(['completed_at' => null]);
+        }
+
         TaskGroupChanged::dispatch(
             $project->id,
             $request->from_group_id,
             $request->to_group_id,
             $request->from_index,
             $request->to_index,
+            $markedDone,
+            $reopened,
         );
 
         return response()->json();

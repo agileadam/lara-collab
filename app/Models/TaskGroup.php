@@ -19,7 +19,12 @@ class TaskGroup extends Model implements AuditableContract, Sortable
 
     public $timestamps = false;
 
-    protected $fillable = ['name', 'color', 'project_id', 'order_column'];
+    protected $fillable = ['name', 'color', 'project_id', 'order_column', 'mark_tasks_done', 'reopen_tasks'];
+
+    protected $casts = [
+        'mark_tasks_done' => 'boolean',
+        'reopen_tasks' => 'boolean',
+    ];
 
     protected static function booted(): void
     {

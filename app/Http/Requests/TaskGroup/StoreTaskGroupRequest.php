@@ -35,6 +35,12 @@ class StoreTaskGroupRequest extends FormRequest
                 'string',
                 'max:16',
             ],
+            'mark_tasks_done' => [
+                'boolean',
+            ],
+            'reopen_tasks' => [
+                'boolean',
+            ],
         ];
     }
 }

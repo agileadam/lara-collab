@@ -19,6 +19,12 @@ const createTaskWebSocketUpdatesSlice = (set, get) => ({
         state.tasks[value] = result[value];
 
         state.tasks[value][0][property] = value;
+
+        if (relatedData) {
+          Object.keys(relatedData).forEach((key) => {
+            state.tasks[value][0][key] = relatedData[key];
+          });
+        }
       } else {
         state.tasks[task.group_id][index][property] = value;
 
@@ -84,7 +90,7 @@ const createTaskWebSocketUpdatesSlice = (set, get) => ({
     const result = reorder(get().tasks[groupId], fromIndex, toIndex);
     return set(produce(state => { state.tasks[groupId] = result }));
   },
-  moveTaskLocally: (fromGroupId, toGroupId, fromIndex, toIndex) => {
+  moveTaskLocally: (fromGroupId, toGroupId, fromIndex, toIndex, markedDone = false, reopened = false) => {
     const result = move(get().tasks, fromGroupId, toGroupId, fromIndex, toIndex);
 
 
@@ -92,6 +98,12 @@ const createTaskWebSocketUpdatesSlice = (set, get) => ({
       state.tasks[fromGroupId] = result[fromGroupId];
       state.tasks[toGroupId] = result[toGroupId];
       state.tasks[toGroupId][toIndex] = {...state.tasks[toGroupId][toIndex], group_id: toGroupId};
+
+      if (markedDone) {
+        state.tasks[toGroupId][toIndex].completed_at = new Date().toISOString();
+      } else if (reopened) {
+        state.tasks[toGroupId][toIndex].completed_at = null;
+      }
     }));
   },
 });
