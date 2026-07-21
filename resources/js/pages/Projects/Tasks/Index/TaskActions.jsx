@@ -1,13 +1,23 @@
 import { openConfirmModal } from "@/components/ConfirmModal";
 import useTasksStore from "@/hooks/store/useTasksStore";
+import { date } from "@/utils/datetime";
 import { usePage } from "@inertiajs/react";
-import { ActionIcon, ColorSwatch, Group, Menu, rem } from "@mantine/core";
-import { IconArchive, IconArchiveOff, IconCheck, IconDots } from "@tabler/icons-react";
+import { ActionIcon, ColorSwatch, Group, Menu, Text, rem } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import {
+  IconArchive,
+  IconArchiveOff,
+  IconCheck,
+  IconChevronRight,
+  IconDots,
+  IconTag,
+} from "@tabler/icons-react";
 import { useForm } from "laravel-precognition-react-inertia";
 
 export default function TaskActions({ task, ...props }) {
   const { releases } = usePage().props;
   const { updateTaskProperty } = useTasksStore();
+  const [opened, { toggle, close }] = useDisclosure(false);
 
   const archiveForm = useForm(
     "delete",
@@ -18,6 +28,7 @@ export default function TaskActions({ task, ...props }) {
   const setRelease = (releaseId) => {
     const release = releaseId ? releases.find((r) => r.id === releaseId) : null;
     updateTaskProperty(task, "release_id", releaseId, release);
+    close();
   };
 
   const openArchiveModal = () =>
@@ -46,6 +57,8 @@ export default function TaskActions({ task, ...props }) {
         (can("restore task") && route().params.archived) ||
         can("edit task")) && (
         <Menu
+          opened={opened}
+          onChange={toggle}
           withArrow
           position="bottom-end"
           withinPortal
@@ -82,34 +95,59 @@ export default function TaskActions({ task, ...props }) {
               </Menu.Item>
             )}
             {can("edit task") && releases?.length > 0 && (
-              <>
-                <Menu.Divider />
-                <Menu.Label>Release</Menu.Label>
-                <Menu.Item
-                  rightSection={
-                    task.release_id === null && (
-                      <IconCheck style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-                    )
-                  }
-                  onClick={() => setRelease(null)}
-                >
-                  No release
-                </Menu.Item>
-                {releases.map((release) => (
+              <Menu
+                trigger="hover"
+                openDelay={100}
+                closeDelay={200}
+                position="right-start"
+                withinPortal
+                shadow="md"
+                offset={0}
+              >
+                <Menu.Target>
                   <Menu.Item
-                    key={release.id}
-                    leftSection={<ColorSwatch color={release.color || "#ced4da"} size={12} />}
+                    leftSection={<IconTag style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
                     rightSection={
-                      task.release_id === release.id && (
+                      <IconChevronRight style={{ width: rem(14), height: rem(14) }} stroke={1.5} />
+                    }
+                  >
+                    Set Release
+                  </Menu.Item>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    rightSection={
+                      task.release_id === null && (
                         <IconCheck style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                       )
                     }
-                    onClick={() => setRelease(release.id)}
+                    onClick={() => setRelease(null)}
                   >
-                    {release.name}
+                    No release
                   </Menu.Item>
-                ))}
-              </>
+                  {releases.map((release) => (
+                    <Menu.Item
+                      key={release.id}
+                      leftSection={<ColorSwatch color={release.color || "#ced4da"} size={12} />}
+                      rightSection={
+                        task.release_id === release.id && (
+                          <IconCheck style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                        )
+                      }
+                      onClick={() => setRelease(release.id)}
+                    >
+                      <Group gap={7} justify="space-between" wrap="nowrap">
+                        <Text size="sm">{release.name}</Text>
+                        {release.target_date && (
+                          <Text size="xs" c="dimmed">
+                            {date(release.target_date)}
+                          </Text>
+                        )}
+                      </Group>
+                    </Menu.Item>
+                  ))}
+                </Menu.Dropdown>
+              </Menu>
             )}
           </Menu.Dropdown>
         </Menu>

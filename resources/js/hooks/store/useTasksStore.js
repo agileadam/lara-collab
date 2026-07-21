@@ -64,8 +64,9 @@ const useTasksStore = create((set, get) => ({
           }
         } else {
           state.tasks[task.group_id][index][property] = value;
-          // For properties with related objects (e.g., priority_id has priority object)
-          if (options) {
+          // For properties with related objects (e.g., priority_id has priority object),
+          // keep the related object in sync even when clearing it (options === null)
+          if (property.endsWith('_id')) {
             const relatedProperty = property.replace('_id', '');
             state.tasks[task.group_id][index][relatedProperty] = options;
           }
