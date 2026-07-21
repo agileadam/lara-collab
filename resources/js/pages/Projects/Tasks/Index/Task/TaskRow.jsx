@@ -1,6 +1,7 @@
 import { Label } from "@/components/Label";
 import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
+import { date } from "@/utils/datetime";
 import { isOverdue } from "@/utils/task";
 import { shortName } from "@/utils/user";
 import { Draggable } from "@hello-pangea/dnd";
@@ -78,6 +79,19 @@ export default function TaskRow({ task, index }) {
             </Text>
 
             <Group wrap="nowrap" style={{ rowGap: rem(3), columnGap: rem(12) }}>
+              {task.release && (
+                <Tooltip
+                  label={`Release: ${task.release.name}${
+                    task.release.target_date ? " " + date(task.release.target_date) : ""
+                  }`}
+                  withArrow
+                  openDelay={300}
+                >
+                  <div>
+                    <Label name={`R ${task.release.name}`} color={task.release.color} />
+                  </div>
+                </Tooltip>
+              )}
               {task.labels.map((label) => (
                 <Label key={label.id} name={label.name} color={label.color} />
               ))}
