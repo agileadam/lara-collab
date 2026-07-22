@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Enums\Queue;
 use App\Models\Comment;
+use App\Notifications\Concerns\FormatsHtmlContent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -12,7 +13,7 @@ use Illuminate\Support\Carbon;
 
 class CommentCreatedMentionedUserNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use FormatsHtmlContent, Queueable;
 
     public function __construct(public Comment $comment) {}
 
@@ -73,7 +74,7 @@ class CommentCreatedMentionedUserNotification extends Notification implements Sh
         return (new MailMessage)
             ->subject("[{$this->comment->task->project->name}] {$this->comment->user->name} has mentioned you in a comment on {$this->comment->task->name} task")
             ->greeting("{$this->comment->user->name} has mentioned you in a comment on {$this->comment->task->name} task")
-            ->line($this->comment->content)
+            ->line($this->plainText($this->comment->content))
             ->action('Open task', route('projects.tasks.open', ['project' => $this->comment->task->project_id, 'task' => $this->comment->task->id]));
     }
 
