@@ -147,6 +147,7 @@ export function EditTaskDrawer() {
   ];
 
   const isFixedPrice = data.pricing_type === PricingType.FIXED;
+  const showFixedPrice = billingEnabled && isFixedPrice;
   const currencySymbol = currency?.symbol || '';
 
   return (
@@ -314,17 +315,19 @@ export function EditTaskDrawer() {
                 mt='md'
               />
 
-              <Select
-                label='Pricing type'
-                placeholder='Select pricing type'
-                mt='md'
-                value={data.pricing_type}
-                onChange={value => updateValue('pricing_type', value)}
-                data={pricingTypes}
-                readOnly={!can('edit task')}
-              />
+              {billingEnabled && (
+                <Select
+                  label='Pricing type'
+                  placeholder='Select pricing type'
+                  mt='md'
+                  value={data.pricing_type}
+                  onChange={value => updateValue('pricing_type', value)}
+                  data={pricingTypes}
+                  readOnly={!can('edit task')}
+                />
+              )}
 
-              {isFixedPrice && (can('view time logs') || can('add time log')) && (
+              {showFixedPrice && (can('view time logs') || can('add time log')) && (
                 <NumberInput
                   label='Fixed price'
                   mt='md'
@@ -340,7 +343,7 @@ export function EditTaskDrawer() {
                 />
               )}
 
-              {!isFixedPrice && (can('view time logs') || can('add time log')) && (
+              {!showFixedPrice && (can('view time logs') || can('add time log')) && (
                 <Timer
                   mt='xl'
                   task={task}

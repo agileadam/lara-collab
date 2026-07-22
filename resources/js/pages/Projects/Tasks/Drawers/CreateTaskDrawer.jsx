@@ -43,7 +43,7 @@ export function CreateTaskDrawer() {
     assigned_to_user_id: '',
     name: '',
     description: '',
-    pricing_type: project?.default_pricing_type || PricingType.HOURLY,
+    pricing_type: billingEnabled ? project?.default_pricing_type || PricingType.HOURLY : PricingType.HOURLY,
     estimation: '',
     priority_id: null,
     release_id: null,
@@ -263,18 +263,20 @@ export function CreateTaskDrawer() {
           />
 
 
-          <Select
-            label='Pricing type'
-            placeholder='Select pricing type'
-            required
-            mt='md'
-            value={form.data.pricing_type}
-            onChange={value => updateValue('pricing_type', value)}
-            data={pricingTypes}
-            error={form.errors.pricing_type}
-          />
+          {billingEnabled && (
+            <Select
+              label='Pricing type'
+              placeholder='Select pricing type'
+              required
+              mt='md'
+              value={form.data.pricing_type}
+              onChange={value => updateValue('pricing_type', value)}
+              data={pricingTypes}
+              error={form.errors.pricing_type}
+            />
+          )}
 
-          {isFixedPrice ? (
+          {billingEnabled && isFixedPrice ? (
             <NumberInput
               label='Fixed price'
               mt='md'
