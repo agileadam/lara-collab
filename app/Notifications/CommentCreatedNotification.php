@@ -23,7 +23,7 @@ class CommentCreatedNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database', 'broadcast'];
+        return ['database', 'broadcast', 'mail'];
     }
 
     /**
@@ -85,6 +85,7 @@ class CommentCreatedNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
+            'id' => $this->comment->id,
             'task_id' => $this->comment->task->id,
             'title' => "{$this->comment->user->name} commented on \"{$this->comment->task->name}\"",
             'subtitle' => "On \"{$this->comment->task->project->name}\" project",

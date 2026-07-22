@@ -23,7 +23,7 @@ class CommentCreatedMentionedUserNotification extends Notification implements Sh
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database', 'broadcast'];
+        return ['database', 'broadcast', 'mail'];
     }
 
     /**
@@ -85,6 +85,7 @@ class CommentCreatedMentionedUserNotification extends Notification implements Sh
     public function toArray(object $notifiable): array
     {
         return [
+            'id' => $this->comment->id,
             'task_id' => $this->comment->task->id,
             'title' => "{$this->comment->user->name} has mentioned you in a comment on \"{$this->comment->task->name}\" task",
             'subtitle' => "On \"{$this->comment->task->project->name}\" project",

@@ -23,7 +23,7 @@ class TaskCreatedMentionedUserNotification extends Notification implements Shoul
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database', 'broadcast'];
+        return ['database', 'broadcast', 'mail'];
     }
 
     /**
@@ -85,6 +85,7 @@ class TaskCreatedMentionedUserNotification extends Notification implements Shoul
     public function toArray(object $notifiable): array
     {
         return [
+            'id' => $this->task->id,
             'task_id' => $this->task->id,
             'title' => "{$this->task->createdByUser->name} has mentioned you in a new \"{$this->task->name}\" task",
             'subtitle' => "On \"{$this->task->project->name}\" project",
