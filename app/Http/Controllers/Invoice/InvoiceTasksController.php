@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Invoice;
 
 use App\Http\Controllers\Controller;
+use App\Models\OwnerCompany;
 use App\Models\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,6 +12,8 @@ class InvoiceTasksController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
+        abort_if(! OwnerCompany::first()?->billing_enabled, 404);
+
         $projectIds = $request->get('projectIds', []);
 
         $projects = Project::whereIn('id', $projectIds)->get();

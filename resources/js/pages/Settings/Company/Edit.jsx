@@ -5,6 +5,7 @@ import Layout from '@/layouts/MainLayout';
 import { usePage } from '@inertiajs/react';
 import {
   Box,
+  Checkbox,
   Fieldset,
   FileInput,
   Grid,
@@ -52,6 +53,7 @@ const CompanyEdit = () => {
     vat: item.vat || '',
     tax: item.tax / 100 || 0,
     date_format: item.date_format || 'D. MMM YYYY',
+    billing_enabled: item.billing_enabled ?? true,
   });
 
   return (
@@ -276,6 +278,20 @@ const CompanyEdit = () => {
                 disabled={!can('edit owner company')}
               />
             </Group>
+          </Fieldset>
+
+          <Fieldset
+            legend='Billing'
+            mt='xl'
+          >
+            <Checkbox
+              label='Enable billing features'
+              description='Turns on Invoices and the Billable task option. Disable this if you do not bill clients.'
+              checked={form.data.billing_enabled}
+              onChange={e => updateValue('billing_enabled', e.currentTarget.checked)}
+              error={form.errors.billing_enabled}
+              disabled={!can('edit owner company')}
+            />
           </Fieldset>
 
           <Fieldset

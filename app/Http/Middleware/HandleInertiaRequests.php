@@ -61,6 +61,7 @@ class HandleInertiaRequests extends Middleware
             'shared' => [
                 'roles' => fn () => Role::orderBy('name')->get(['id', 'name'])->toArray(),
                 'dateFormat' => fn () => OwnerCompany::first()?->date_format ?? 'D. MMM YYYY',
+                'billingEnabled' => fn () => OwnerCompany::first()?->billing_enabled ?? true,
             ],
             'flash' => session()->get('flash'),
             'version' => config('app.version'),

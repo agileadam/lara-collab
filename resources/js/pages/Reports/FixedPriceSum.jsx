@@ -21,7 +21,11 @@ import { IconCurrencyDollar } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 
 const FixedPriceSum = () => {
-  let { users, dropdowns } = usePage().props;
+  let {
+    users,
+    dropdowns,
+    shared: { billingEnabled },
+  } = usePage().props;
 
   const params = currentUrlParams();
 
@@ -101,11 +105,13 @@ const FixedPriceSum = () => {
                 />
               </DatesProvider>
 
-              <Checkbox
-                label='Billable'
-                checked={form.data.billable}
-                onChange={event => updateValue('billable', event.currentTarget.checked)}
-              />
+              {billingEnabled && (
+                <Checkbox
+                  label='Billable'
+                  checked={form.data.billable}
+                  onChange={event => updateValue('billable', event.currentTarget.checked)}
+                />
+              )}
 
               <Checkbox
                 label='Completed'

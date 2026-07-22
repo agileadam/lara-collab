@@ -3,10 +3,23 @@
 namespace App\Policies;
 
 use App\Models\Invoice;
+use App\Models\OwnerCompany;
 use App\Models\User;
 
 class InvoicePolicy
 {
+    /**
+     * Deny all invoice abilities when billing features are disabled for the company.
+     */
+    public function before(User $user, string $ability): ?bool
+    {
+        if (! OwnerCompany::first()?->billing_enabled) {
+            return false;
+        }
+
+        return null;
+    }
+
     /**
      * Determine whether the user can view any models.
      */

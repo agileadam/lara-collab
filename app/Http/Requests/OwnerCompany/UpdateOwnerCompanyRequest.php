@@ -44,6 +44,7 @@ class UpdateOwnerCompanyRequest extends FormRequest
                     'YYYY-MM-DD',
                 ]),
             ],
+            'billing_enabled' => ['boolean'],
         ];
     }
 }

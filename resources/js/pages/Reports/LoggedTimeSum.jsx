@@ -23,7 +23,12 @@ import dayjs from 'dayjs';
 import round from 'lodash/round';
 
 const LoggedTimeSum = () => {
-  let { projects, clientCompanies, dropdowns } = usePage().props;
+  let {
+    projects,
+    clientCompanies,
+    dropdowns,
+    shared: { billingEnabled },
+  } = usePage().props;
 
   const params = currentUrlParams();
 
@@ -104,11 +109,13 @@ const LoggedTimeSum = () => {
                 />
               </DatesProvider>
 
-              <Checkbox
-                label='Billable'
-                checked={form.data.billable}
-                onChange={event => updateValue('billable', event.currentTarget.checked)}
-              />
+              {billingEnabled && (
+                <Checkbox
+                  label='Billable'
+                  checked={form.data.billable}
+                  onChange={event => updateValue('billable', event.currentTarget.checked)}
+                />
+              )}
 
               <Checkbox
                 label='Completed'

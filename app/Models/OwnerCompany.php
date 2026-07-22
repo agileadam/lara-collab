@@ -34,6 +34,11 @@ class OwnerCompany extends Model implements AuditableContract
         'vat',
         'tax',
         'date_format',
+        'billing_enabled',
+    ];
+
+    protected $casts = [
+        'billing_enabled' => 'boolean',
     ];
 
     public function country(): BelongsTo

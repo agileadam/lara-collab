@@ -35,6 +35,7 @@ export function CreateTaskDrawer() {
     project,
     currency,
     auth: { user },
+    shared: { billingEnabled },
   } = usePage().props;
 
   const initial = {
@@ -288,12 +289,14 @@ export function CreateTaskDrawer() {
             />
           ) : null}
 
-          <Checkbox
-            label='Billable'
-            mt='xl'
-            checked={form.data.billable}
-            onChange={event => updateValue('billable', event.currentTarget.checked)}
-          />
+          {billingEnabled && (
+            <Checkbox
+              label='Billable'
+              mt='xl'
+              checked={form.data.billable}
+              onChange={event => updateValue('billable', event.currentTarget.checked)}
+            />
+          )}
 
           {!hasRoles(user, ['client']) && (
             <Checkbox

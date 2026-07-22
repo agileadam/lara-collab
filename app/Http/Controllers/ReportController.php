@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PricingType;
 use App\Models\ClientCompany;
+use App\Models\OwnerCompany;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ class ReportController extends Controller
     public function loggedTimeSum(Request $request): Response
     {
         Gate::allowIf(fn (User $user) => $user->can('view logged time sum report'));
+        abort_if(! OwnerCompany::first()?->billing_enabled, 404);
 
         $completed = $request->get('completed', 'true') === 'true';
 
@@ -110,6 +112,7 @@ class ReportController extends Controller
     public function fixedPriceSum(Request $request): Response
     {
         Gate::allowIf(fn (User $user) => $user->can('view fixed price sum report'));
+        abort_if(! OwnerCompany::first()?->billing_enabled, 404);
 
         $completed = $request->get('completed', 'true') === 'true';
 

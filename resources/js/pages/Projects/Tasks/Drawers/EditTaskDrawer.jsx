@@ -44,6 +44,7 @@ export function EditTaskDrawer() {
     openedTask,
     currency,
     auth: { user },
+    shared: { billingEnabled },
   } = usePage().props;
 
   useEffect(() => {
@@ -346,13 +347,15 @@ export function EditTaskDrawer() {
                 />
               )}
 
-              <Checkbox
-                label='Billable'
-                mt='xl'
-                checked={data.billable}
-                onChange={event => updateValue('billable', event.currentTarget.checked)}
-                disabled={!can('edit task')}
-              />
+              {billingEnabled && (
+                <Checkbox
+                  label='Billable'
+                  mt='xl'
+                  checked={data.billable}
+                  onChange={event => updateValue('billable', event.currentTarget.checked)}
+                  disabled={!can('edit task')}
+                />
+              )}
 
               {!hasRoles(user, ['client']) && (
                 <Checkbox
