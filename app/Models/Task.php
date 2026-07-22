@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\PricingType;
 use App\Models\Filters\IsNullFilter;
+use App\Models\Filters\ReleaseFilter;
 use App\Models\Filters\TaskCompletedFilter;
 use App\Models\Filters\TaskOverdueFilter;
 use App\Models\Filters\WhereHasFilter;
@@ -95,7 +96,7 @@ class Task extends Model implements AuditableContract, Sortable
             (new IsNullFilter('due_on'))->setQueryName('not_set'),
             (new TaskCompletedFilter('completed_at'))->setQueryName('status'),
             (new WhereHasFilter('labels'))->setQueryName('labels'),
-            (new WhereInFilter('release_id'))->setQueryName('releases'),
+            (new ReleaseFilter('release_id'))->setQueryName('releases'),
         ];
     }
 

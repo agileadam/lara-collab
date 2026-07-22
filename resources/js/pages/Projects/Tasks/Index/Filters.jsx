@@ -116,6 +116,12 @@ export default function Filters() {
               Releases
             </Text>
             <Stack justify="flex-start" gap={6}>
+              <FilterButton
+                selected={filters.releases.includes("not_set")}
+                onClick={() => toggleArrayFilter("releases", "not_set")}
+              >
+                Not set
+              </FilterButton>
               {[...releases]
                 .sort((a, b) => new Date(a.target_date || "9999-12-31") - new Date(b.target_date || "9999-12-31"))
                 .map((item) => {
