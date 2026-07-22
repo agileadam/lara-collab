@@ -3,6 +3,12 @@ import { create } from 'zustand';
 
 const useNavigationStore = create((set) => ({
   items: [],
+  sidebarCollapsed: JSON.parse(localStorage.getItem('sidebar-collapsed') ?? 'false'),
+  toggleSidebar: () => set((state) => {
+    const sidebarCollapsed = !state.sidebarCollapsed;
+    localStorage.setItem('sidebar-collapsed', JSON.stringify(sidebarCollapsed));
+    return { sidebarCollapsed };
+  }),
   setItems: (items) => set(() => ({ items: [...items] })),
   toggle: (label) => {
     return set(produce(state => {
