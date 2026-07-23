@@ -21,6 +21,7 @@ import {
 import { DateInput } from '@mantine/dates';
 import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
+import Activity from './Activity';
 import Checklist from './Checklist';
 import Comments from './Comments';
 import LabelsDropdown from './LabelsDropdown';
@@ -240,6 +241,8 @@ export function EditTaskDrawer() {
               <Checklist task={task} />
 
               {can('view comments') && <Comments task={task} />}
+
+              <Activity task={task} />
             </div>
             <div className={classes.sidebar}>
               <Select

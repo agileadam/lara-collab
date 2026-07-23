@@ -17,6 +17,7 @@ use App\Http\Controllers\Settings\LabelController;
 use App\Http\Controllers\Settings\OwnerCompanyController;
 use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\Settings\TaskPriorityController;
+use App\Http\Controllers\Task\ActivityController as TaskActivityController;
 use App\Http\Controllers\Task\AttachmentController;
 use App\Http\Controllers\Task\ChecklistItemController;
 use App\Http\Controllers\Task\CommentController;
@@ -101,6 +102,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::put('checklist-items/{checklistItem}', [ChecklistItemController::class, 'update'])->name('checklist-items.update');
             Route::delete('checklist-items/{checklistItem}', [ChecklistItemController::class, 'destroy'])->name('checklist-items.destroy');
             Route::post('checklist-items/reorder', [ChecklistItemController::class, 'reorder'])->name('checklist-items.reorder');
+        })->scopeBindings();
+
+        // TASK ACTIVITY
+        Route::group(['prefix' => '{project}/tasks/{task}', 'as' => 'tasks.'], function () {
+            Route::get('activity', [TaskActivityController::class, 'index'])->name('activity');
         })->scopeBindings();
     });
 

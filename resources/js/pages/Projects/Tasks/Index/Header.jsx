@@ -9,6 +9,7 @@ import ProjectActions from "./ProjectActions";
 import { usePage } from "@inertiajs/react";
 import { ActionIcon, Button, Grid, Group, Text, Title, Tooltip } from "@mantine/core";
 import {
+  IconActivity,
   IconFilter,
   IconFilterCog,
   IconLayoutKanban,
@@ -68,6 +69,18 @@ export default function Header() {
           )}
 
           <ArchivedFilterButton />
+
+          {can("view activities") && (
+            <Tooltip label="Project activity" openDelay={500} withArrow>
+              <ActionIcon
+                variant="default"
+                size="lg"
+                onClick={() => redirectTo("my-work.activity.index", { project: project.id })}
+              >
+                <IconActivity style={{ width: "60%", height: "60%" }} stroke={1.5} />
+              </ActionIcon>
+            </Tooltip>
+          )}
 
           <ProjectActions />
         </Group>

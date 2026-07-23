@@ -1,3 +1,4 @@
+import createTaskActivitySlice from '@/hooks/store/tasks/TaskActivitySlice';
 import createTaskAttachmentsSlice from '@/hooks/store/tasks/TaskAttachmentsSlice';
 import createTaskChecklistItemsSlice from '@/hooks/store/tasks/TaskChecklistItemsSlice';
 import createTaskCommentsSlice from '@/hooks/store/tasks/TaskCommentsSlice';
@@ -10,6 +11,7 @@ import { produce } from "immer";
 import { create } from 'zustand';
 
 const useTasksStore = create((set, get) => ({
+  ...createTaskActivitySlice(set, get),
   ...createTaskAttachmentsSlice(set, get),
   ...createTaskChecklistItemsSlice(set, get),
   ...createTaskTimeLogsSlice(set, get),

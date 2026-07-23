@@ -1,21 +1,11 @@
 import EmptyWithIcon from "@/components/EmptyWithIcon";
 import Layout from "@/layouts/MainLayout";
 import { dateTime, diffForHumans } from "@/utils/datetime";
+import { getActivityIcon } from "@/utils/activityIcon";
 import { redirectTo, reloadWithQuery, reloadWithoutQueryParams } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
 import { Anchor, Breadcrumbs, Center, Select, Text, Timeline, Title, Tooltip } from "@mantine/core";
-import {
-  IconActivity,
-  IconArchive,
-  IconCalendarMonth,
-  IconCheck,
-  IconClock,
-  IconEdit,
-  IconMessage,
-  IconPaperclip,
-  IconPlus,
-  IconX,
-} from "@tabler/icons-react";
+import { IconActivity } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 const ActivityIndex = () => {
@@ -30,36 +20,6 @@ const ActivityIndex = () => {
       reloadWithoutQueryParams({ exclude: ["project"] });
     }
   }, [selectedProject]);
-
-  const getIcon = (title) => {
-    if (title.includes("archived")) {
-      return <IconArchive size={18} />;
-    }
-    if (title.includes("comment")) {
-      return <IconMessage size={18} />;
-    }
-    if (title.includes("was changed")) {
-      return <IconEdit size={18} />;
-    }
-    if (title.includes("Due date")) {
-      return <IconCalendarMonth size={18} />;
-    }
-    if (title.includes("Attachment")) {
-      return <IconPaperclip size={18} />;
-    }
-    if (title.includes("Estimation was set")) {
-      return <IconClock size={18} />;
-    }
-    if (title.includes("was completed")) {
-      return <IconCheck size={18} />;
-    }
-    if (title.includes("uncompleted")) {
-      return <IconX size={18} />;
-    }
-    if (title === "New task" || title === "New project" || title.includes("Assigned user")) {
-      return <IconPlus size={18} />;
-    }
-  };
 
   return (
     <>
@@ -91,7 +51,7 @@ const ActivityIndex = () => {
             </Title>
             <Timeline active={9999} bulletSize={32} lineWidth={3} mb="xl">
               {groupedActivities[date].map((activity) => (
-                <Timeline.Item key={activity.id} bullet={getIcon(activity.title)}>
+                <Timeline.Item key={activity.id} bullet={getActivityIcon(activity.title)}>
                   <div>
                     <Anchor
                       href="#"
