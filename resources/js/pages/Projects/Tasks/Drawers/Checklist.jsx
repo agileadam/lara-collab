@@ -3,6 +3,7 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { ActionIcon, Box, Button, Checkbox, Group, Text, TextInput, Title } from "@mantine/core";
 import { IconGripVertical, IconX } from "@tabler/icons-react";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import classes from "./css/Checklist.module.css";
 
 export default function Checklist({ task }) {
@@ -49,48 +50,55 @@ export default function Checklist({ task }) {
                   index={index}
                   isDragDisabled={!editable}
                 >
-                  {(provided) => (
-                    <Group
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      className={classes.row}
-                      wrap="nowrap"
-                    >
-                      <Box {...provided.dragHandleProps} className={classes.dragHandle}>
-                        <IconGripVertical size={16} stroke={1.5} />
-                      </Box>
+                  {(provided, snapshot) => {
+                    const row = (
+                      <Group
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        className={classes.row}
+                        wrap="nowrap"
+                      >
+                        <Box {...provided.dragHandleProps} className={classes.dragHandle}>
+                          <IconGripVertical size={16} stroke={1.5} />
+                        </Box>
 
-                      <Checkbox
-                        checked={item.completed}
-                        disabled={!editable}
-                        onChange={e => updateChecklistItem(task, item.id, 'completed', e.currentTarget.checked)}
-                      />
+                        <Checkbox
+                          checked={item.completed}
+                          disabled={!editable}
+                          onChange={e => updateChecklistItem(task, item.id, 'completed', e.currentTarget.checked)}
+                        />
 
-                      <TextInput
-                        key={`${item.id}-${item.name}`}
-                        flex={1}
-                        variant="unstyled"
-                        classNames={{ input: classes.itemInput }}
-                        defaultValue={item.name}
-                        readOnly={!editable}
-                        className={item.completed ? classes.completed : undefined}
-                        onBlur={e => {
-                          const value = e.currentTarget.value.trim();
-                          if (value && value !== item.name) updateChecklistItem(task, item.id, 'name', value);
-                        }}
-                      />
+                        <TextInput
+                          key={`${item.id}-${item.name}`}
+                          flex={1}
+                          variant="unstyled"
+                          classNames={{ input: classes.itemInput }}
+                          defaultValue={item.name}
+                          readOnly={!editable}
+                          className={item.completed ? classes.completed : undefined}
+                          onBlur={e => {
+                            const value = e.currentTarget.value.trim();
+                            if (value && value !== item.name) updateChecklistItem(task, item.id, 'name', value);
+                          }}
+                        />
 
-                      {editable && (
-                        <ActionIcon
-                          variant="subtle"
-                          color="gray"
-                          onClick={() => deleteChecklistItem(task, item.id)}
-                        >
-                          <IconX size={16} />
-                        </ActionIcon>
-                      )}
-                    </Group>
-                  )}
+                        {editable && (
+                          <ActionIcon
+                            variant="subtle"
+                            color="gray"
+                            onClick={() => deleteChecklistItem(task, item.id)}
+                          >
+                            <IconX size={16} />
+                          </ActionIcon>
+                        )}
+                      </Group>
+                    );
+
+                    // The Drawer animates in with a CSS transform, which becomes the
+                    // containing block for the drag layer's position: fixed. Portal the
+                    // item to the body while dragging so it tracks the cursor correctly.
+                    return snapshot.isDragging ? createPortal(row, document.body) : row;
+                  }}
                 </Draggable>
               ))}
               {provided.placeholder}
