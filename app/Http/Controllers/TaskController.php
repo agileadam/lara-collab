@@ -72,7 +72,7 @@ class TaskController extends Controller
             'usersWithAccessToProject' => PermissionService::usersWithAccessToProject($project),
             'labels' => Label::get(['id', 'name', 'color']),
             'priorities' => TaskPriorityResource::collection(TaskPriority::orderBy('order')->get()),
-            'releases' => $project->releases()->where('assignable', true)->orderBy('target_date')->get(['id', 'name', 'color', 'target_date']),
+            'releases' => $project->releases()->where('assignable', true)->get(['id', 'name', 'color', 'target_date']),
             'taskGroups' => $groups,
             'groupedTasks' => $groupedTasks,
             'openedTask' => $task ? $task->loadDefault() : null,
@@ -173,8 +173,9 @@ class TaskController extends Controller
         return redirect()->back()->success('Task archived', 'The task was successfully archived.');
     }
 
-    public function restore(Project $project, Task $task)
+    public function restore(Project $project, int $taskId)
     {
+        $task = Task::withArchived()->where('project_id', $project->id)->findOrFail($taskId);
 
         $this->authorize('restore', [$task, $project]);
 

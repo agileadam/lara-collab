@@ -7,6 +7,8 @@ use App\Http\Requests\Release\StoreReleaseRequest;
 use App\Http\Requests\Release\UpdateReleaseRequest;
 use App\Models\Project;
 use App\Models\Release;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ReleaseController extends Controller
 {
@@ -35,5 +37,14 @@ class ReleaseController extends Controller
         $release->delete();
 
         return redirect()->route('projects.edit', $project)->success('Release deleted', 'The release was successfully deleted.');
+    }
+
+    public function reorder(Request $request, Project $project): JsonResponse
+    {
+        $this->authorize('reorder', [Release::class, $project]);
+
+        Release::setNewOrder($request->ids);
+
+        return response()->json();
     }
 }

@@ -31,4 +31,12 @@ class ReleasePolicy
     {
         return $user->hasPermissionTo('delete release') && $user->hasProjectAccess($project);
     }
+
+    /**
+     * Determine whether the user can reorder releases.
+     */
+    public function reorder(User $user, Project $project): bool
+    {
+        return $user->hasPermissionTo('reorder release') && $user->hasProjectAccess($project);
+    }
 }

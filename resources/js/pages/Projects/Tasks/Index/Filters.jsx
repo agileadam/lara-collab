@@ -122,27 +122,25 @@ export default function Filters() {
               >
                 Not set
               </FilterButton>
-              {[...releases]
-                .sort((a, b) => new Date(a.target_date || "9999-12-31") - new Date(b.target_date || "9999-12-31"))
-                .map((item) => {
-                  const selected = filters.releases.includes(item.id);
+              {releases.map((item) => {
+                const selected = filters.releases.includes(item.id);
 
-                  return (
-                    <FilterButton
-                      key={item.id}
-                      selected={selected}
-                      onClick={() => toggleArrayFilter("releases", item.id)}
-                      leftSection={<ColorSwatch color={item.color} size={18} />}
-                    >
-                      <Group gap={6} justify="space-between" wrap="nowrap">
-                        <span>{item.name}</span>
-                        {item.target_date && (
-                          <Text fz="xs" c={selected ? "white" : "dimmed"}>{date(item.target_date)}</Text>
-                        )}
-                      </Group>
-                    </FilterButton>
-                  );
-                })}
+                return (
+                  <FilterButton
+                    key={item.id}
+                    selected={selected}
+                    onClick={() => toggleArrayFilter("releases", item.id)}
+                    leftSection={<ColorSwatch color={item.color} size={18} />}
+                  >
+                    <Group gap={6} justify="space-between" wrap="nowrap">
+                      <span>{item.name}</span>
+                      {item.target_date && (
+                        <Text fz="xs" c={selected ? "white" : "dimmed"}>{date(item.target_date)}</Text>
+                      )}
+                    </Group>
+                  </FilterButton>
+                );
+              })}
             </Stack>
           </div>
         )}

@@ -54,6 +54,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('{project}/releases', [ReleaseController::class, 'store'])->name('releases.store');
         Route::put('{project}/releases/{release}', [ReleaseController::class, 'update'])->name('releases.update')->scopeBindings();
         Route::delete('{project}/releases/{release}', [ReleaseController::class, 'destroy'])->name('releases.destroy')->scopeBindings();
+        Route::post('{project}/releases/reorder', [ReleaseController::class, 'reorder'])->name('releases.reorder');
 
         // TASKS
         Route::get('{project}/tasks', [TaskController::class, 'index'])->name('tasks');
@@ -61,7 +62,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('{project}/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update')->scopeBindings();
         Route::get('{project}/tasks/{task}/open', [TaskController::class, 'index'])->name('tasks.open')->scopeBindings();
         Route::delete('{project}/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy')->scopeBindings();
-        Route::post('{project}/tasks/{task}/restore', [TaskController::class, 'restore'])->name('tasks.restore')->scopeBindings();
+        Route::post('{project}/tasks/{taskId}/restore', [TaskController::class, 'restore'])->name('tasks.restore')->scopeBindings();
 
         Route::post('{project}/tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete')->scopeBindings();
         Route::post('{project}/tasks/reorder', [TaskController::class, 'reorder'])->name('tasks.reorder');
