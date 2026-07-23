@@ -1,0 +1,26 @@
+.row {
+    margin-bottom: rem(4);
+}
+
+.dragHandle {
+    cursor: grab;
+    display: flex;
+    color: var(--mantine-color-dimmed);
+}
+
+.completed input {
+    text-decoration: line-through;
+    color: var(--mantine-color-dimmed);
+}
+
+.itemInput {
+    border: rem(1) solid transparent;
+    border-radius: var(--mantine-radius-sm);
+    padding-inline: rem(8);
+    margin-inline: rem(-8);
+    transition: border-color 100ms ease;
+}
+
+.itemInput:focus {
+    border-color: var(--mantine-color-default-border);
+}

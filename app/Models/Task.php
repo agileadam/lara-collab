@@ -84,6 +84,7 @@ class Task extends Model implements AuditableContract, Sortable
         'priority:id,label,color,order',
         'release:id,name,color,target_date',
         'attachments',
+        'checklistItems',
         'timeLogs.user:id,name',
     ];
 
@@ -175,6 +176,11 @@ class Task extends Model implements AuditableContract, Sortable
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function checklistItems(): HasMany
+    {
+        return $this->hasMany(ChecklistItem::class);
     }
 
     public function activities(): MorphMany

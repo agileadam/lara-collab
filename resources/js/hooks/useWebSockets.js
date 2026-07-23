@@ -10,6 +10,7 @@ export default function useWebSockets() {
   const {
     addTaskLocally, updateTaskLocally, removeTaskLocally, restoreTaskLocally, addCommentLocally, addAttachmentsLocally,
     removeAttachmentLocally, addTimeLogLocally, removeTimeLogLocally, reorderTaskLocally, moveTaskLocally,
+    addChecklistItemLocally, updateChecklistItemLocally, removeChecklistItemLocally, reorderChecklistItemsLocally,
   } = useTasksStore();
   const {
     addTaskGroupLocally, updateTaskGroupLocally, removeTaskGroupLocally, restoreTaskGroupLocally, reorderTaskGroupLocally,
@@ -38,6 +39,10 @@ export default function useWebSockets() {
       .listen('Task\\AttachmentDeleted', (e) => removeAttachmentLocally(e.taskId, e.attachmentId))
       .listen('Task\\TimeLogCreated', (e) => addTimeLogLocally(e.timeLog))
       .listen('Task\\TimeLogDeleted', (e) => removeTimeLogLocally(e.taskId, e.timeLogId))
+      .listen('Task\\ChecklistItemCreated', (e) => addChecklistItemLocally(e.checklistItem))
+      .listen('Task\\ChecklistItemUpdated', (e) => updateChecklistItemLocally(e.checklistItem))
+      .listen('Task\\ChecklistItemDeleted', (e) => removeChecklistItemLocally(e.taskId, e.checklistItemId))
+      .listen('Task\\ChecklistItemOrderChanged', (e) => reorderChecklistItemsLocally(e.taskId, e.ids))
       .listen('Task\\TaskOrderChanged', (e) => reorderTaskLocally(e.groupId, e.fromIndex, e.toIndex))
       .listen('Task\\TaskGroupChanged', (e) => moveTaskLocally(e.fromGroupId, e.toGroupId, e.fromIndex, e.toIndex, e.markedDone, e.reopened))
       .listen('TaskGroup\\TaskGroupCreated', (e) => addTaskGroupLocally(e.taskGroup))

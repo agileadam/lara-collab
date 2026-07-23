@@ -18,6 +18,7 @@ use App\Http\Controllers\Settings\OwnerCompanyController;
 use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\Settings\TaskPriorityController;
 use App\Http\Controllers\Task\AttachmentController;
+use App\Http\Controllers\Task\ChecklistItemController;
 use App\Http\Controllers\Task\CommentController;
 use App\Http\Controllers\Task\GroupController;
 use App\Http\Controllers\Task\ReleaseController;
@@ -92,6 +93,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::group(['prefix' => '{project}/tasks/{task}', 'as' => 'tasks.'], function () {
             Route::get('comment', [CommentController::class, 'index'])->name('comments');
             Route::post('comment', [CommentController::class, 'store'])->name('comments.store');
+        })->scopeBindings();
+
+        // CHECKLIST ITEMS
+        Route::group(['prefix' => '{project}/tasks/{task}', 'as' => 'tasks.'], function () {
+            Route::post('checklist-items', [ChecklistItemController::class, 'store'])->name('checklist-items.store');
+            Route::put('checklist-items/{checklistItem}', [ChecklistItemController::class, 'update'])->name('checklist-items.update');
+            Route::delete('checklist-items/{checklistItem}', [ChecklistItemController::class, 'destroy'])->name('checklist-items.destroy');
+            Route::post('checklist-items/reorder', [ChecklistItemController::class, 'reorder'])->name('checklist-items.reorder');
         })->scopeBindings();
     });
 

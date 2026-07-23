@@ -86,6 +86,46 @@ const createTaskWebSocketUpdatesSlice = (set, get) => ({
       state.tasks[task.group_id][index].time_logs = state.tasks[task.group_id][index].time_logs.filter(i => i.id !== timeLogId);
     }));
   },
+  addChecklistItemLocally: (checklistItem) => {
+    return set(produce(state => {
+      const task = get().findTask(checklistItem.task_id);
+      if (!task) return;
+      const index = state.tasks[task.group_id].findIndex(i => i.id === task.id);
+
+      state.tasks[task.group_id][index].checklist_items = [...state.tasks[task.group_id][index].checklist_items, checklistItem];
+    }));
+  },
+  updateChecklistItemLocally: (checklistItem) => {
+    return set(produce(state => {
+      const task = get().findTask(checklistItem.task_id);
+      if (!task) return;
+      const index = state.tasks[task.group_id].findIndex(i => i.id === task.id);
+      const items = state.tasks[task.group_id][index].checklist_items;
+      const itemIndex = items.findIndex(i => i.id === checklistItem.id);
+
+      if (itemIndex !== -1) items[itemIndex] = checklistItem;
+    }));
+  },
+  removeChecklistItemLocally: (taskId, checklistItemId) => {
+    return set(produce(state => {
+      const task = get().findTask(taskId);
+      if (!task) return;
+      const index = state.tasks[task.group_id].findIndex(i => i.id === taskId);
+
+      state.tasks[task.group_id][index].checklist_items =
+        state.tasks[task.group_id][index].checklist_items.filter(i => i.id !== checklistItemId);
+    }));
+  },
+  reorderChecklistItemsLocally: (taskId, ids) => {
+    return set(produce(state => {
+      const task = get().findTask(taskId);
+      if (!task) return;
+      const index = state.tasks[task.group_id].findIndex(i => i.id === taskId);
+      const items = state.tasks[task.group_id][index].checklist_items;
+
+      state.tasks[task.group_id][index].checklist_items = ids.map(id => items.find(i => i.id === id));
+    }));
+  },
   reorderTaskLocally: (groupId, fromIndex, toIndex) => {
     const result = reorder(get().tasks[groupId], fromIndex, toIndex);
     return set(produce(state => { state.tasks[groupId] = result }));

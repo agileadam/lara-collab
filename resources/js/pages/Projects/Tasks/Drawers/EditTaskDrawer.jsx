@@ -21,6 +21,7 @@ import {
 import { DateInput } from '@mantine/dates';
 import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
+import Checklist from './Checklist';
 import Comments from './Comments';
 import LabelsDropdown from './LabelsDropdown';
 import PriorityDropdown from './PriorityDropdown';
@@ -235,6 +236,8 @@ export function EditTaskDrawer() {
                   remove={index => deleteAttachment(task, index)}
                 />
               )}
+
+              <Checklist task={task} />
 
               {can('view comments') && <Comments task={task} />}
             </div>
