@@ -22,7 +22,10 @@ import { PricingType } from '@/utils/enums';
 import ReleasesSection from './Releases/ReleasesSection';
 
 const ProjectEdit = ({ dropdowns: { companies, users, currencies } }) => {
-  const { item } = usePage().props;
+  const {
+    item,
+    shared: { billingEnabled },
+  } = usePage().props;
   const [currencySymbol, setCurrencySymbol] = useState();
 
   const [form, submit, updateValue] = useForm('post', route('projects.update', item.id), {
@@ -123,29 +126,33 @@ const ProjectEdit = ({ dropdowns: { companies, users, currencies } }) => {
             error={form.errors.users}
           />
 
-          <Select
-            label='Default pricing type'
-            placeholder='Select pricing type'
-            required
-            mt='md'
-            value={form.data.default_pricing_type}
-            onChange={value => updateValue('default_pricing_type', value)}
-            data={pricingTypes}
-            error={form.errors.default_pricing_type}
-          />
+          {billingEnabled && (
+            <Select
+              label='Default pricing type'
+              placeholder='Select pricing type'
+              required
+              mt='md'
+              value={form.data.default_pricing_type}
+              onChange={value => updateValue('default_pricing_type', value)}
+              data={pricingTypes}
+              error={form.errors.default_pricing_type}
+            />
+          )}
 
-          <NumberInput
-            label='Hourly rate'
-            mt='md'
-            allowNegative={false}
-            clampBehavior='strict'
-            decimalScale={2}
-            fixedDecimalScale={true}
-            prefix={currencySymbol}
-            value={form.data.rate}
-            onChange={value => updateValue('rate', value)}
-            error={form.errors.rate}
-          />
+          {billingEnabled && (
+            <NumberInput
+              label='Hourly rate'
+              mt='md'
+              allowNegative={false}
+              clampBehavior='strict'
+              decimalScale={2}
+              fixedDecimalScale={true}
+              prefix={currencySymbol}
+              value={form.data.rate}
+              onChange={value => updateValue('rate', value)}
+              error={form.errors.rate}
+            />
+          )}
 
           <Group
             justify='space-between'
